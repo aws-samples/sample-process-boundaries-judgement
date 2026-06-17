@@ -1,0 +1,64 @@
+flowchart LR
+    c2["c2: SaaS subscription revenue should be rec…"]
+    i5["i5: Transaction price for the executed cont…"]
+    f7["f7: As of 2026-03-31, $30,000 implementatio…"]
+    f1["f1: Acme signed a 36-month SaaS subscriptio…"]
+    a1["a1"]
+    s9["s9: ASC 606-10-55-41 to 55-45"]
+    a5["a5"]
+    s2["s2: ASC 606-10-25-19"]
+    a2["a2"]
+    t2["t2"]
+    f2["f2: Contract includes one-time implementati…"]
+    i1["i1: Implementation services and SaaS subscr…"]
+    f5["f5: Contract includes a renewal option at e…"]
+    s8["s8: ASC 606-10-25-23 to 25-30"]
+    c3["c3: The end-of-term renewal option at then-…"]
+    i3["i3: The optional premium support add-on at …"]
+    t3["t3"]
+    t1["t1"]
+    i6["i6: Implementation services PO is satisfied…"]
+    c1["c1: Implementation services and SaaS subscr…"]
+    a4["a4"]
+    i2["i2: SaaS subscription is a single performan…"]
+    f3["f3: Implementation services completed 2026-…"]
+    c4["c4: The optional premium support add-on at …"]
+    a3["a3"]
+    i4["i4: The end-of-term renewal option priced a…"]
+    s5["s5: ASC 606-10-55-42"]
+    s6["s6: ASC 606-10-32-28 to 32-31"]
+    f4["f4: Contract includes an optional premium s…"]
+    f9["f9: Reverse-engineering the $5,000/month ra…"]
+    s3["s3: ASC 606-10-25-27"]
+    f2 --> c1
+    f3 --> c1
+    s2 --> c1
+    s8 --> c1
+    i1 --> c1
+    i6 --> c1
+    a1 --> c1
+    a5 --> c1
+    f1 --> c2
+    f3 --> c2
+    f7 --> c2
+    f9 --> c2
+    s3 --> c2
+    s6 --> c2
+    i2 --> c2
+    i5 --> c2
+    t1 --> c2
+    t2 --> c2
+    t3 --> c2
+    a4 --> c2
+    f5 --> c3
+    s5 --> c3
+    s9 --> c3
+    i4 --> c3
+    a2 --> c3
+    f4 --> c4
+    s5 --> c4
+    s9 --> c4
+    i3 --> c4
+    a3 --> c4
+    classDef conclusion fill:#A8E6E0,stroke:#1EC4B4,stroke-width:2px;
+    class c1,c2,c3,c4 conclusion;

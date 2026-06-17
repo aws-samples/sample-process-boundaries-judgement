@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reasoning record: saas-contract-2026-q1-customer-acme</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; background: #FAFAFA; color: #1A1A1A; }
+  .layout { display: flex; height: 100vh; }
+  .left { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .right { width: 360px; border-left: 1px solid #DDDDDD; background: #FFFFFF; display: flex; flex-direction: column; }
+  header { padding: 12px 16px; border-bottom: 1px solid #DDDDDD; background: #FFFFFF; }
+  header h1 { font-size: 14px; margin: 0; font-weight: 600; }
+  header .case-id { color: #666; font-size: 12px; margin-top: 2px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .filters { padding: 10px 16px; border-bottom: 1px solid #DDDDDD; background: #FFFFFF; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 12px; }
+  .filters label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .filters .group { display: flex; gap: 8px; align-items: center; }
+  .filters .group-label { font-weight: 600; color: #555; margin-right: 4px; }
+  .filters input[type="range"] { width: 100px; }
+  #graph { flex: 1; min-height: 0; }
+  .right h2 { font-size: 13px; margin: 0; padding: 12px 16px; border-bottom: 1px solid #DDDDDD; font-weight: 600; }
+  .panel { padding: 14px 16px; overflow-y: auto; flex: 1; font-size: 13px; line-height: 1.5; }
+  .panel.empty { color: #888; font-style: italic; }
+  .panel .field { margin-bottom: 12px; }
+  .panel .field .panel-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .panel .field .value { color: #1A1A1A; word-wrap: break-word; }
+  .panel .field code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; background: #F0F0F0; padding: 1px 4px; border-radius: 3px; }
+  .panel .kind-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .panel .edges { margin-top: 4px; }
+  .panel .edges .edge-row { font-size: 12px; color: #444; padding: 2px 0; }
+  .panel .edges .edge-row a { color: #0066CC; text-decoration: none; cursor: pointer; }
+  .panel .edges .edge-row a:hover { text-decoration: underline; }
+  .panel pre { background: #F5F5F5; padding: 8px; border-radius: 4px; font-size: 11px; overflow-x: auto; max-height: 200px; }
+  .legend { padding: 10px 16px; border-top: 1px solid #DDDDDD; font-size: 11px; }
+  .legend .item { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; margin-bottom: 4px; }
+  .legend .swatch { width: 10px; height: 10px; border-radius: 2px; border: 1px solid #888; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="left">
+    <header>
+      <h1>Reasoning record</h1>
+      <div class="case-id">saas-contract-2026-q1-customer-acme</div>
+    </header>
+    <div class="filters">
+      <div class="group">
+        <span class="group-label">Kinds:</span>
+        <label><input type="checkbox" class="kind-filter" value="fact" checked> Fact</label>
+        <label><input type="checkbox" class="kind-filter" value="standard" checked> Standard</label>
+        <label><input type="checkbox" class="kind-filter" value="interpretation" checked> Interp</label>
+        <label><input type="checkbox" class="kind-filter" value="threshold" checked> Threshold</label>
+        <label><input type="checkbox" class="kind-filter" value="alternative" checked> Alt</label>
+        <label><input type="checkbox" class="kind-filter" value="conclusion" checked> Conclusion</label>
+        <label><input type="checkbox" class="kind-filter" value="open_question" checked> Open Q</label>
+      </div>
+      <div class="group">
+        <span class="group-label">Min confidence:</span>
+        <input type="range" id="conf-filter" min="0" max="100" value="0" step="5">
+        <span id="conf-value">0.00</span>
+      </div>
+      <div class="group">
+        <span class="group-label">Comfort zone:</span>
+        <select id="zone-filter">
+          <option value="all" selected>All</option>
+          <option value="in">In zone only</option>
+          <option value="out">Out of zone only</option>
+        </select>
+      </div>
+    </div>
+    <div id="graph"></div>
+    <div class="legend">
+      <div class="item"><span class="swatch" style="background:#BFE3F2"></span>Fact</div>
+      <div class="item"><span class="swatch" style="background:#D8C7F2"></span>Standard</div>
+      <div class="item"><span class="swatch" style="background:#F5F5F5"></span>Interpretation</div>
+      <div class="item"><span class="swatch" style="background:#FFF3B0"></span>Threshold</div>
+      <div class="item"><span class="swatch" style="background:#E5E5E5"></span>Alternative</div>
+      <div class="item"><span class="swatch" style="background:#A8E6E0; border-color:#1EC4B4"></span>Conclusion</div>
+      <div class="item"><span class="swatch" style="background:#F2C5E8"></span>Open question</div>
+    </div>
+  </div>
+  <div class="right">
+    <h2>Selected node</h2>
+    <div class="panel empty" id="panel">Click a node to see its details.</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"
+        integrity="sha384-IWROdLKRsN1UuJywMlWl7/blXQ8GEooN2n7dzTxfEPd7ybYIKCUJ2Ol/1Gpf3YV4"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"
+        integrity="sha384-2IH3T69EIKYC4c+RXZifZRvaH5SRUdacJW7j6HtE5rQbvLhKKdawxq6vpIzJ7j9M"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"
+        integrity="sha384-u69h9ebXeSjlg6q/rb1zKTRAGu/h8deCl0409xpS/QJctMKnc4M9Fzkm01VOQdeF"
+        crossorigin="anonymous"></script>
+<script>
+const ELEMENTS = {"nodes": [{"data": {"id": "f1", "label": "f1: Acme signed a 36-month SaaS subscription with Cli\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f2", "label": "f2: Contract includes one-time implementation service\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f3", "label": "f3: Implementation services completed 2026-02-15; Saa\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f4", "label": "f4: Contract includes an optional premium support add\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f5", "label": "f5: Contract includes a renewal option at end of mont\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f6", "label": "f6: Client paid full $360,000 upfront on 2026-01-20.", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f7", "label": "f7: As of 2026-03-31, $30,000 implementation revenue \u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f8", "label": "f8: Engagement team computed monthly subscription as \u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "f9", "label": "f9: Reverse-engineering the $5,000/month rate: $360,0\u2026", "kind": "fact", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s1", "label": "s1: ASC 606-10-25-1", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s2", "label": "s2: ASC 606-10-25-19", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s3", "label": "s3: ASC 606-10-25-27", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s4", "label": "s4: ASC 606-10-32-11", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s5", "label": "s5: ASC 606-10-55-42", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s6", "label": "s6: ASC 606-10-32-28 to 32-31", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s7", "label": "s7: ASC 606-10-32-15 to 32-17", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s8", "label": "s8: ASC 606-10-25-23 to 25-30", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "s9", "label": "s9: ASC 606-10-55-41 to 55-45", "kind": "standard", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i1", "label": "i1: Implementation services and SaaS subscription are\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i2", "label": "i2: SaaS subscription is a single performance obligat\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i3", "label": "i3: The optional premium support add-on at $1,000/mon\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i4", "label": "i4: The end-of-term renewal option priced at then-cur\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i5", "label": "i5: Transaction price for the executed contract is $3\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i6", "label": "i6: Implementation services PO is satisfied at a poin\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "i7", "label": "i7: Significant financing component (SFC) analysis un\u2026", "kind": "interpretation", "confidence": null, "comfort_zone": null}}, {"data": {"id": "t1", "label": "t1: Monthly subscription revenue (USD/month) under straight-line recognition over 33 months = 10000.0", "kind": "threshold", "confidence": null, "comfort_zone": null}}, {"data": {"id": "t2", "label": "t2: Subscription revenue recognized through 2026-03-31 (USD) = 15000.0", "kind": "threshold", "confidence": null, "comfort_zone": null}}, {"data": {"id": "t3", "label": "t3: Subscription monthly rate range across plausible interpretations (USD/month) = 9429.0", "kind": "threshold", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a1", "label": "a1: Treat implementation services as not distinct and\u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a2", "label": "a2: Treat the renewal option as a material right and \u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a3", "label": "a3: Treat the premium support option as a material ri\u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a4", "label": "a4: Engagement team's approach: subscription monthly \u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a5", "label": "a5: Implementation PO recognized over time across the\u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "a6", "label": "a6: Apply the one-year practical expedient under ASC \u2026", "kind": "alternative", "confidence": null, "comfort_zone": null}}, {"data": {"id": "c1", "label": "c1: Implementation services and SaaS subscription are\u2026", "kind": "conclusion", "confidence": 0.8, "comfort_zone": "in"}}, {"data": {"id": "c2", "label": "c2: SaaS subscription revenue should be recognized ra\u2026", "kind": "conclusion", "confidence": 0.7, "comfort_zone": "in"}}, {"data": {"id": "c3", "label": "c3: The end-of-term renewal option at then-current li\u2026", "kind": "conclusion", "confidence": 0.9, "comfort_zone": "in"}}, {"data": {"id": "c4", "label": "c4: The optional premium support add-on at $1,000/mon\u2026", "kind": "conclusion", "confidence": 0.55, "comfort_zone": "in"}}, {"data": {"id": "oq1", "label": "oq1: Confirm the precise service-period denominator fo\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq2", "label": "oq2: Confirm whether the implementation services are h\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq3", "label": "oq3: Obtain SSP analysis for the premium support add-o\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq4", "label": "oq4: Engagement team recorded $7,500 of subscription r\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq5", "label": "oq5: Perform a relative-SSP allocation under ASC 606-1\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq6", "label": "oq6: Significant financing component analysis under AS\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}, {"data": {"id": "oq7", "label": "oq7: Premium support option price-protection analysis:\u2026", "kind": "open_question", "confidence": null, "comfort_zone": null}}], "edges": [{"data": {"id": "e0", "source": "f2", "target": "i1", "label": "appliesTo"}}, {"data": {"id": "e1", "source": "f3", "target": "i1", "label": "appliesTo"}}, {"data": {"id": "e2", "source": "s2", "target": "i1", "label": "anchors"}}, {"data": {"id": "e3", "source": "f1", "target": "i2", "label": "appliesTo"}}, {"data": {"id": "e4", "source": "f3", "target": "i2", "label": "appliesTo"}}, {"data": {"id": "e5", "source": "s3", "target": "i2", "label": "anchors"}}, {"data": {"id": "e6", "source": "f4", "target": "i3", "label": "appliesTo"}}, {"data": {"id": "e7", "source": "s5", "target": "i3", "label": "anchors"}}, {"data": {"id": "e8", "source": "s9", "target": "i3", "label": "anchors"}}, {"data": {"id": "e9", "source": "f5", "target": "i4", "label": "appliesTo"}}, {"data": {"id": "e10", "source": "s5", "target": "i4", "label": "anchors"}}, {"data": {"id": "e11", "source": "f1", "target": "i5", "label": "appliesTo"}}, {"data": {"id": "e12", "source": "f2", "target": "i5", "label": "appliesTo"}}, {"data": {"id": "e13", "source": "s2", "target": "i5", "label": "anchors"}}, {"data": {"id": "e14", "source": "s6", "target": "i5", "label": "anchors"}}, {"data": {"id": "e15", "source": "f2", "target": "i6", "label": "appliesTo"}}, {"data": {"id": "e16", "source": "f3", "target": "i6", "label": "appliesTo"}}, {"data": {"id": "e17", "source": "s8", "target": "i6", "label": "anchors"}}, {"data": {"id": "e18", "source": "f1", "target": "i7", "label": "appliesTo"}}, {"data": {"id": "e19", "source": "f6", "target": "i7", "label": "appliesTo"}}, {"data": {"id": "e20", "source": "s7", "target": "i7", "label": "anchors"}}, {"data": {"id": "e21", "source": "f1", "target": "t1", "label": "derivedFrom"}}, {"data": {"id": "e22", "source": "f2", "target": "t1", "label": "derivedFrom"}}, {"data": {"id": "e23", "source": "f3", "target": "t1", "label": "derivedFrom"}}, {"data": {"id": "e24", "source": "i5", "target": "t1", "label": "derivedFrom"}}, {"data": {"id": "e25", "source": "f3", "target": "t2", "label": "derivedFrom"}}, {"data": {"id": "e26", "source": "t1", "target": "t2", "label": "derivedFrom"}}, {"data": {"id": "e27", "source": "f1", "target": "t3", "label": "derivedFrom"}}, {"data": {"id": "e28", "source": "f2", "target": "t3", "label": "derivedFrom"}}, {"data": {"id": "e29", "source": "f3", "target": "t3", "label": "derivedFrom"}}, {"data": {"id": "e30", "source": "i5", "target": "t3", "label": "derivedFrom"}}, {"data": {"id": "e31", "source": "f2", "target": "c1", "label": "supports"}}, {"data": {"id": "e32", "source": "f3", "target": "c1", "label": "supports"}}, {"data": {"id": "e33", "source": "s2", "target": "c1", "label": "supports"}}, {"data": {"id": "e34", "source": "s8", "target": "c1", "label": "supports"}}, {"data": {"id": "e35", "source": "i1", "target": "c1", "label": "supports"}}, {"data": {"id": "e36", "source": "i6", "target": "c1", "label": "supports"}}, {"data": {"id": "e37", "source": "a1", "target": "c1", "label": "supports"}}, {"data": {"id": "e38", "source": "a5", "target": "c1", "label": "supports"}}, {"data": {"id": "e39", "source": "f1", "target": "c2", "label": "supports"}}, {"data": {"id": "e40", "source": "f3", "target": "c2", "label": "supports"}}, {"data": {"id": "e41", "source": "f7", "target": "c2", "label": "supports"}}, {"data": {"id": "e42", "source": "f9", "target": "c2", "label": "supports"}}, {"data": {"id": "e43", "source": "s3", "target": "c2", "label": "supports"}}, {"data": {"id": "e44", "source": "s6", "target": "c2", "label": "supports"}}, {"data": {"id": "e45", "source": "i2", "target": "c2", "label": "supports"}}, {"data": {"id": "e46", "source": "i5", "target": "c2", "label": "supports"}}, {"data": {"id": "e47", "source": "t1", "target": "c2", "label": "supports"}}, {"data": {"id": "e48", "source": "t2", "target": "c2", "label": "supports"}}, {"data": {"id": "e49", "source": "t3", "target": "c2", "label": "supports"}}, {"data": {"id": "e50", "source": "a4", "target": "c2", "label": "supports"}}, {"data": {"id": "e51", "source": "f5", "target": "c3", "label": "supports"}}, {"data": {"id": "e52", "source": "s5", "target": "c3", "label": "supports"}}, {"data": {"id": "e53", "source": "s9", "target": "c3", "label": "supports"}}, {"data": {"id": "e54", "source": "i4", "target": "c3", "label": "supports"}}, {"data": {"id": "e55", "source": "a2", "target": "c3", "label": "supports"}}, {"data": {"id": "e56", "source": "f4", "target": "c4", "label": "supports"}}, {"data": {"id": "e57", "source": "s5", "target": "c4", "label": "supports"}}, {"data": {"id": "e58", "source": "s9", "target": "c4", "label": "supports"}}, {"data": {"id": "e59", "source": "i3", "target": "c4", "label": "supports"}}, {"data": {"id": "e60", "source": "a3", "target": "c4", "label": "supports"}}]};
+const KIND_STYLES = [{"selector": "node[kind = \"fact\"]", "style": {"background-color": "#BFE3F2", "border-color": "#5E9CB7", "border-width": 1, "shape": "round-rectangle"}}, {"selector": "node[kind = \"standard\"]", "style": {"background-color": "#D8C7F2", "border-color": "#7B5EA8", "border-width": 1, "shape": "round-tag"}}, {"selector": "node[kind = \"interpretation\"]", "style": {"background-color": "#F5F5F5", "border-color": "#888888", "border-width": 1, "shape": "round-rectangle"}}, {"selector": "node[kind = \"threshold\"]", "style": {"background-color": "#FFF3B0", "border-color": "#B89A2E", "border-width": 1, "shape": "diamond"}}, {"selector": "node[kind = \"alternative\"]", "style": {"background-color": "#E5E5E5", "border-color": "#888888", "border-width": 1, "shape": "round-rectangle"}}, {"selector": "node[kind = \"conclusion\"]", "style": {"background-color": "#A8E6E0", "border-color": "#1EC4B4", "border-width": 3, "shape": "round-rectangle"}}, {"selector": "node[kind = \"open_question\"]", "style": {"background-color": "#F2C5E8", "border-color": "#B85EA8", "border-width": 1, "shape": "round-rectangle"}}];
+const RECORD = {"case_id": "saas-contract-2026-q1-customer-acme", "nodes": {"f1": {"id": "f1", "kind": "fact", "claim": "Acme signed a 36-month SaaS subscription with Client on 2026-01-15 for total contract value $360,000 ($10,000/month).", "source": "Contract dated 2026-01-15"}, "f2": {"id": "f2", "kind": "fact", "claim": "Contract includes one-time implementation services valued at $30,000, billed and recognized in month 1.", "source": "Contract terms"}, "f3": {"id": "f3", "kind": "fact", "claim": "Implementation services completed 2026-02-15; SaaS access began 2026-02-15.", "source": "Engagement records"}, "f4": {"id": "f4", "kind": "fact", "claim": "Contract includes an optional premium support add-on at $1,000/month exercisable any time during the term; not currently exercised.", "source": "Contract terms"}, "f5": {"id": "f5", "kind": "fact", "claim": "Contract includes a renewal option at end of month 36 priced at then-current list price.", "source": "Contract terms"}, "f6": {"id": "f6", "kind": "fact", "claim": "Client paid full $360,000 upfront on 2026-01-20.", "source": "AR records"}, "f7": {"id": "f7", "kind": "fact", "claim": "As of 2026-03-31, $30,000 implementation revenue and $7,500 subscription revenue (1.5 months at $5,000/month) recognized; $322,500 deferred.", "source": "Q1 2026 close trial balance"}, "f8": {"id": "f8", "kind": "fact", "claim": "Engagement team computed monthly subscription as $5,000/month, derived by carving out the $30,000 implementation fee from total $360,000 over 36 months: ($360,000 \u2212 $30,000 implementation \u2212 ? other) / 36. The math implies they treated subscription as ($360,000 \u2212 $180,000)/36 or otherwise reduced the monthly rate from $10,000 to $5,000, which is not consistent with the stated $10,000/month subscription pricing.", "source": "Inference from Q1 close entries vs. contract terms"}, "f9": {"id": "f9", "kind": "fact", "claim": "Reverse-engineering the $5,000/month rate: $360,000/72 = $5,000 (suggests recognition over 72 months \u2014 double the 36-month term), or $180,000/36 = $5,000 (suggests halving the contract value before allocation). Neither $10,000 \u2212 ($30,000/36) \u2248 $9,167 nor $330,000/33 = $10,000 nor $330,000/35 \u2248 $9,429 yields $5,000. The arithmetic origin of $5,000/month is therefore not any of the natural relative-SSP or carve-out computations and must be obtained from the engagement team.", "source": "Auditor reverse-engineering of f7 vs. f1/f2"}, "s1": {"id": "s1", "kind": "standard", "rule_id": "ASC 606-10-25-1", "version": "in effect 2026-05-15", "text": "An entity shall account for a contract with a customer that is within the scope of this Topic only when all of the following criteria are met: (a) parties have approved the contract; (b) entity can identify each party's rights; (c) entity can identify the payment terms; (d) contract has commercial substance; (e) it is probable that the entity will collect substantially all of the consideration."}, "s2": {"id": "s2", "kind": "standard", "rule_id": "ASC 606-10-25-19", "version": "in effect 2026-05-15", "text": "A good or service promised to a customer is distinct if both: (a) the customer can benefit from it on its own or with readily available resources; and (b) the promise is separately identifiable from other promises in the contract."}, "s3": {"id": "s3", "kind": "standard", "rule_id": "ASC 606-10-25-27", "version": "in effect 2026-05-15", "text": "For each performance obligation satisfied over time, the entity shall recognize revenue over time by measuring progress toward complete satisfaction."}, "s4": {"id": "s4", "kind": "standard", "rule_id": "ASC 606-10-32-11", "version": "in effect 2026-05-15", "text": "An entity shall include variable consideration in the transaction price only to the extent that it is probable that a significant reversal in cumulative revenue recognized will not occur when the uncertainty is resolved."}, "s5": {"id": "s5", "kind": "standard", "rule_id": "ASC 606-10-55-42", "version": "in effect 2026-05-15", "text": "If a customer has a material right that the customer would not receive without entering into the contract, that promise represents a performance obligation in the contract."}, "s6": {"id": "s6", "kind": "standard", "rule_id": "ASC 606-10-32-28 to 32-31", "version": "in effect 2026-05-15", "text": "An entity shall allocate the transaction price to each performance obligation in an amount that depicts the consideration to which the entity expects to be entitled in exchange for transferring the promised goods or services. To allocate on a relative standalone selling price basis, the entity shall determine the standalone selling price (SSP) at contract inception of each distinct good or service underlying each PO and allocate the transaction price in proportion to those SSPs. If an SSP is not directly observable, the entity shall estimate it (e.g., adjusted market assessment, expected cost plus margin, or residual approach where permitted)."}, "s7": {"id": "s7", "kind": "standard", "rule_id": "ASC 606-10-32-15 to 32-17", "version": "in effect 2026-05-15", "text": "In determining the transaction price, an entity shall adjust the promised amount of consideration for the effects of the time value of money if the timing of payments agreed to by the parties provides the customer or the entity with a significant benefit of financing the transfer of goods or services. As a practical expedient, an entity need not adjust if the period between transfer and payment is one year or less. Factors include the difference between the amount of consideration and the cash selling price, and the combined effect of the expected length of time between transfer and payment and prevailing interest rates."}, "s8": {"id": "s8", "kind": "standard", "rule_id": "ASC 606-10-25-23 to 25-30", "version": "in effect 2026-05-15", "text": "An entity transfers control of a good or service over time if any of the criteria in 25-27 are met; otherwise, the PO is satisfied at a point in time. For point-in-time POs, the entity recognizes revenue when the customer obtains control, considering indicators such as present right to payment, legal title, physical possession, risks and rewards of ownership, and customer acceptance."}, "s9": {"id": "s9", "kind": "standard", "rule_id": "ASC 606-10-55-41 to 55-45", "version": "in effect 2026-05-15", "text": "Customer options to acquire additional goods or services give rise to a performance obligation in the contract only if the option provides a material right to the customer that it would not receive without entering into that contract (for example, a discount that is incremental to the range of discounts typically given for those goods or services to that class of customer). If the option provides a material right, the customer in effect pays in advance for future goods or services and the entity recognizes revenue when those future goods or services are transferred or when the option expires."}, "i1": {"id": "i1", "kind": "interpretation", "statement": "Implementation services and SaaS subscription are separate performance obligations because implementation provides standalone value (or could be obtained from third parties for typical SaaS platforms) and is separately identifiable from ongoing platform access. This is the typical conclusion but depends on whether implementation is highly integrated with / customizes the SaaS such that the customer cannot benefit from SaaS without it being performed by the vendor.", "applies_to": ["f2", "f3"], "anchors": ["s2"]}, "i2": {"id": "i2", "kind": "interpretation", "statement": "SaaS subscription is a single performance obligation satisfied over time (stand-ready obligation to provide access for 36 months) and revenue should be recognized ratably over the 36-month service period beginning 2026-02-15.", "applies_to": ["f1", "f3"], "anchors": ["s3"]}, "i3": {"id": "i3", "kind": "interpretation", "statement": "The optional premium support add-on at $1,000/month exercisable at customer's discretion at a fixed price is a customer option for additional services governed by ASC 606-10-55-41 to 55-45. It does not represent a material right if the $1,000/month price equals the standalone selling price (SSP) of premium support throughout the term; if priced below SSP at any point \u2014 including by virtue of locking in today's price against future SSP escalation \u2014 it would be a material right requiring allocation of transaction price.", "applies_to": ["f4"], "anchors": ["s5", "s9"]}, "i4": {"id": "i4", "kind": "interpretation", "statement": "The end-of-term renewal option priced at then-current list price does not provide the customer with a discount relative to a new customer and therefore is not a material right under ASC 606-10-55-42. No allocation of transaction price to the renewal option is required.", "applies_to": ["f5"], "anchors": ["s5"]}, "i5": {"id": "i5", "kind": "interpretation", "statement": "Transaction price for the executed contract is $360,000 fixed consideration (subject to financing-component analysis in i7). Allocation must be performed on a relative-SSP basis under ASC 606-10-32-28 to 32-31, not by simple carve-out. If the SSP of implementation is $30,000 and the SSP of 36 months of subscription access is $330,000 (or whatever amount is supported by an SSP analysis), the $360,000 transaction price is allocated in those proportions. The contract math itself ($10,000/month \u00d7 36 = $360,000 with implementation appearing as a separately stated $30,000 line) creates ambiguity about whether (a) total contract value is $390,000 with $360,000 subscription + $30,000 implementation, (b) total is $360,000 with $30,000 implementation + $330,000 subscription bundled into the monthly billings, or (c) implementation is embedded in the $10,000/month rate. This factual ambiguity must be resolved before allocation can be finalized.", "applies_to": ["f1", "f2"], "anchors": ["s2", "s6"]}, "i6": {"id": "i6", "kind": "interpretation", "statement": "Implementation services PO is satisfied at a point in time (2026-02-15) under ASC 606-10-25-23 to 25-30. The over-time criteria of 25-27 are not met for a discrete implementation deliverable: (a) the customer does not simultaneously receive and consume benefits as Acme performs because the deliverable is the configured platform, (b) Acme is not creating/enhancing an asset the customer controls during performance, and (c) Acme's performance does create an asset with alternative use (the configuration is specific but separable). Indicators of point-in-time transfer at completion include customer acceptance and right to use the configured platform. No interim recognition through Q1 close is appropriate; full $30,000 on 2026-02-15 is consistent with point-in-time treatment.", "applies_to": ["f2", "f3"], "anchors": ["s8"]}, "i7": {"id": "i7", "kind": "interpretation", "statement": "Significant financing component (SFC) analysis under ASC 606-10-32-15 to 32-17: customer paid $360,000 upfront on 2026-01-20 for services delivered through approximately 2029-01. The weighted-average period between payment and delivery for the subscription PO is roughly 18 months; the longest gap is ~36 months. This exceeds the one-year practical expedient. At a representative discount rate of 5%, the imputed financing benefit to Acme on the subscription portion (~$330,000) over an average ~18-month deferral is on the order of $20,000\u2013$25,000. Whether this is 'significant' is a judgment, but the duration alone takes the contract outside the one-year expedient. If determined significant, transaction price for the subscription PO would be reduced by an imputed interest amount and corresponding interest expense recognized over the financing period \u2014 increasing reported subscription revenue over the term and creating an interest expense line.", "applies_to": ["f1", "f6"], "anchors": ["s7"]}, "t1": {"id": "t1", "kind": "threshold", "name": "Monthly subscription revenue (USD/month) under straight-line recognition over 33 months", "value": 10000.0, "derivation": "If subscription transaction price = $360,000 total \u2212 $30,000 implementation = $330,000, allocated over 33 months of service (Feb 15, 2026 through Jan 14, 2029, since first 3 months of contract term may include implementation period or contract starts 2026-01-15 with service starting 2026-02-15 yielding ~34.5 months remaining). Using $330,000 / 33 = $10,000/month consistent with stated $10,000/month rate.", "inputs": ["f1", "f2", "f3", "i5"], "sensitivity": "If service period is 34.5 months (from 2026-02-15 to 2029-01-15), monthly rate = $330,000/34.5 \u2248 $9,565/month. If contract is interpreted as 36 months of subscription beginning 2026-01-15 with implementation overlapping, rate could differ. Range: approximately $9,167 to $10,000/month depending on service-period assumption."}, "t2": {"id": "t2", "kind": "threshold", "name": "Subscription revenue recognized through 2026-03-31 (USD)", "value": 15000.0, "derivation": "Service start 2026-02-15 to 2026-03-31 = 1.5 months \u00d7 $10,000/month = $15,000.", "inputs": ["f3", "t1"], "sensitivity": "If monthly rate is $9,565 (34.5-month service period), recognized = ~$14,348. Engagement team recorded $7,500, which is materially understated regardless of which service-period assumption is used."}, "t3": {"id": "t3", "kind": "threshold", "name": "Subscription monthly rate range across plausible interpretations (USD/month)", "value": 9429.0, "derivation": "Mid-range estimate using subscription transaction price of $330,000 over 35 months of access (2026-02-15 through approximately 2029-01-14, the residual of 36-month contract term beginning 2026-01-15 net of one month pre-access): $330,000 / 35 \u2248 $9,429/month. Other plausible rates: $10,000 (33 months), $9,565 (34.5 months), $9,167 (residual carve-out $10,000 \u2212 $30,000/36), $10,000 (if implementation is incremental and total contract is $390,000).", "inputs": ["f1", "f2", "f3", "i5"], "sensitivity": "Range: $9,167 to $10,000/month depending on (a) whether total contract is $360,000 inclusive or $390,000, (b) service-period denominator (33, 34.5, 35, or 36 months), and (c) outcome of relative-SSP allocation. Q1 recognized amount range correspondingly: ~$13,750 to ~$15,000. All exceed the $7,500 booked."}, "a1": {"id": "a1", "kind": "alternative", "alternative": "Treat implementation services as not distinct and combine with SaaS subscription into a single performance obligation, recognizing the entire $360,000 ratably over the service period.", "rejection_reason": "Implementation for typical SaaS is generally distinct under ASC 606-10-25-19: the customer can benefit from the platform once configured, and implementation is separately identifiable. Absent evidence that implementation is highly customized or required to be performed only by Acme, separate-PO treatment is appropriate. (Open question raised below to confirm implementation nature.)"}, "a2": {"id": "a2", "kind": "alternative", "alternative": "Treat the renewal option as a material right and allocate a portion of transaction price to it.", "rejection_reason": "Renewal pricing equals then-current list price, providing no incremental discount or benefit beyond what a new customer would receive. Per ASC 606-10-55-42 and standard interpretation, this is not a material right."}, "a3": {"id": "a3", "kind": "alternative", "alternative": "Treat the premium support option as a material right and allocate transaction price to it now.", "rejection_reason": "If $1,000/month equals SSP for the premium support service throughout the option exercise window, the option does not convey a discount and is not a material right. If the fixed $1,000 price is below expected future SSP (price-protection feature), or if priced below current SSP, it conveys a material right and requires allocation. (Subject to confirmation of SSP and pricing trajectory \u2014 see oq3 and oq6.)"}, "a4": {"id": "a4", "kind": "alternative", "alternative": "Engagement team's approach: subscription monthly rate of $5,000/month after 'carve-out for implementation'.", "rejection_reason": "There is no ASC 606 basis for halving the subscription rate. Reverse-engineering (f9) shows $5,000/month is not produced by any natural carve-out, residual, or relative-SSP computation. The most likely explanations are (a) recognition over 72 months instead of 36, (b) double-application of a 50% reduction, or (c) a posting error. None is supportable."}, "a5": {"id": "a5", "kind": "alternative", "alternative": "Implementation PO recognized over time across the implementation period (2026-01-15 to 2026-02-15) rather than at point in time on 2026-02-15.", "rejection_reason": "Over-time criteria in ASC 606-10-25-27 are not satisfied for a discrete implementation deliverable that culminates in customer acceptance/go-live. Even if over-time were appropriate, the implementation period is fully within Q1 2026, so cumulative revenue recognized through 2026-03-31 would equal $30,000 either way; the conclusion is not sensitive to this choice for Q1 cutoff. Point-in-time on 2026-02-15 remains the better characterization."}, "a6": {"id": "a6", "kind": "alternative", "alternative": "Apply the one-year practical expedient under ASC 606-10-32-18 and ignore the financing component.", "rejection_reason": "The expedient applies when the period between transfer and payment is one year or less. Here, payment was made 2026-01-20 but a substantial portion of subscription services is delivered more than 12 months later (through approximately 2029). The expedient is not available for the bulk of the subscription PO, so an SFC assessment is required."}, "c1": {"id": "c1", "kind": "conclusion", "statement": "Implementation services and SaaS subscription are separate performance obligations; implementation revenue ($30,000) recognized at point in time on completion (2026-02-15) is appropriate, subject to (i) confirmation that implementation is not so highly integrated/customized as to fail the distinct test, and (ii) finalization of relative-SSP allocation which may adjust the $30,000 figure if SSPs differ from stated prices.", "confidence": 0.8, "comfort_zone": "in", "comfort_zone_reason": "Standard SaaS accounting; well-established interpretation of ASC 606-10-25-19 and point-in-time recognition under 25-23 to 25-30. Confidence reduced because we have not (a) confirmed whether implementation involves significant integration/customization that could render it not distinct, or (b) performed a relative-SSP allocation that could shift the $30,000 amount.", "supported_by": ["f2", "f3", "s2", "s8", "i1", "i6", "a1", "a5"]}, "c2": {"id": "c2", "kind": "conclusion", "statement": "SaaS subscription revenue should be recognized ratably over the access period beginning 2026-02-15, at a monthly rate in the range of approximately $9,167 to $10,000/month depending on resolution of contract-value math, service-period denominator, and relative-SSP allocation. Recognized through 2026-03-31 should be in the range $13,750\u2013$15,000, materially exceeding the $7,500 booked. The $7,500 understatement is directionally clear and material; the precise corrected deferred revenue figure cannot be finalized until oq1, oq2, oq3, and oq5 are resolved.", "confidence": 0.7, "comfort_zone": "in", "comfort_zone_reason": "Direction and approximate magnitude of the engagement team's error are clear and not sensitive to the open questions. Specific corrected figures are sensitive to unresolved factual and allocation questions, so the conclusion is stated as a range rather than a point estimate.", "supported_by": ["f1", "f3", "f7", "f9", "s3", "s6", "i2", "i5", "t1", "t2", "t3", "a4"]}, "c3": {"id": "c3", "kind": "conclusion", "statement": "The end-of-term renewal option at then-current list price is not a material right and requires no allocation of transaction price.", "confidence": 0.9, "comfort_zone": "in", "comfort_zone_reason": "Direct application of ASC 606-10-55-42; no incremental discount means no material right. Standard conclusion in SaaS practice.", "supported_by": ["f5", "s5", "s9", "i4", "a2"]}, "c4": {"id": "c4", "kind": "conclusion", "statement": "The optional premium support add-on at $1,000/month is presumptively not a material right and not currently part of the transaction price; treatment is contingent on confirming $1,000/month equals SSP today and across the option exercise window (i.e., that the fixed price does not confer price protection against expected SSP escalation).", "confidence": 0.55, "comfort_zone": "in", "comfort_zone_reason": "Conclusion is conditional. If SSP analysis differs at contract inception or expected SSP rises during the term, allocation may be required. Confidence reduced from 0.6 to reflect the additional price-protection dimension raised in oq6.", "supported_by": ["f4", "s5", "s9", "i3", "a3"]}, "oq1": {"id": "oq1", "kind": "open_question", "question": "Confirm the precise service-period denominator for the SaaS subscription PO: is the subscription term 33 months, ~34.5 months, or 35 months (Feb 15, 2026 to ~Jan 14, 2029)? This affects the monthly recognition rate and the Q1 cutoff figure. Also confirm total contract value math: 36 months \u00d7 $10,000 = $360,000 leaves no consideration for the $30,000 implementation, suggesting either (i) total contract is $390,000 and the $360,000 figure excludes implementation, or (ii) subscription has 33 months at $10,000 plus $30,000 implementation = $360,000, or (iii) implementation is embedded in the $10,000/month rate.", "escalate_to_reviewer": true, "raised_by": "agent"}, "oq2": {"id": "oq2", "kind": "open_question", "question": "Confirm whether the implementation services are highly integrated with or specifically customize the SaaS platform such that the customer cannot benefit from SaaS access without Acme performing the implementation. If so, implementation may not be distinct and would be combined with subscription into a single PO recognized over the service period.", "escalate_to_reviewer": true, "raised_by": "agent"}, "oq3": {"id": "oq3", "kind": "open_question", "question": "Obtain SSP analysis for the premium support add-on. Is $1,000/month consistent with standalone selling price for comparable customers? If priced below SSP, the option conveys a material right requiring allocation.", "escalate_to_reviewer": true, "raised_by": "agent"}, "oq4": {"id": "oq4", "kind": "open_question", "question": "Engagement team recorded $7,500 of subscription revenue based on a $5,000/month rate. Reverse-engineering shows $5,000/month is not produced by any natural carve-out, residual, or relative-SSP method (see f9). Has the team documented a rationale, and what arithmetic yielded $5,000? Most likely a posting error to be corrected with a reclassification entry of approximately $6,250\u2013$7,500 from deferred revenue to subscription revenue, but root cause must be confirmed before correcting entry is finalized.", "escalate_to_reviewer": true, "raised_by": "agent"}, "oq5": {"id": "oq5", "kind": "open_question", "question": "Perform a relative-SSP allocation under ASC 606-10-32-28 to 32-31. Specifically: (a) determine SSP of implementation services (observable from standalone implementation engagements with other customers, or estimated using cost-plus-margin); (b) determine SSP of 36 months of SaaS subscription access (observable from list price or other customer contracts); (c) allocate the $360,000 (or $390,000, pending oq1) transaction price in proportion to those SSPs. Document whether the resulting allocation differs materially from the $30,000 / $330,000 (or other) split currently assumed. This is the required allocation methodology and has not yet been performed.", "escalate_to_reviewer": true, "raised_by": "adversary"}, "oq6": {"id": "oq6", "kind": "open_question", "question": "Significant financing component analysis under ASC 606-10-32-15 to 32-17: customer paid $360,000 upfront on 2026-01-20 for services delivered through ~2029. The one-year practical expedient is not available for the subscription PO. Determine (a) whether the financing component is significant in the context of the contract (qualitative and quantitative judgment), (b) the appropriate discount rate (Acme's incremental borrowing rate or rate that would be reflected in a separate financing transaction with the customer), and (c) the resulting adjustment to subscription transaction price and interest expense recognition pattern. At 5% on ~$330,000 over an average 18-month deferral, the order-of-magnitude effect is ~$20,000\u2013$25,000.", "escalate_to_reviewer": true, "raised_by": "adversary"}, "oq7": {"id": "oq7", "kind": "open_question", "question": "Premium support option price-protection analysis: the $1,000/month price is fixed for the entire 36-month exercise window. Is Acme's current and projected SSP for premium support expected to remain at or below $1,000/month for the full term? If expected SSP escalates above $1,000 during the term, the option's locked-in pricing conveys a material right at contract inception even though today's price equals today's SSP. Obtain pricing forecast / list-price history to assess.", "escalate_to_reviewer": true, "raised_by": "adversary"}}, "adversarial_rounds": [{"round_number": 1, "challenges": [{"dimension": "framing", "challenge": "The agent frames the contract value arithmetic as an open question (oq1) but never commits to the most natural reading of the facts: $10,000/month \u00d7 36 months = $360,000 total, meaning the implementation services are already embedded within the $360,000 and there is no separate $30,000 add-on that survives the relative-SSP allocation step. The correct framing under ASC 606-10-32-28 to 32-30 is to allocate the $360,000 transaction price among POs based on relative SSPs \u2014 not to simply 'carve out' $30,000 and assign the residual to subscription. The agent never performs or requires a relative-SSP allocation, which is the required unit of analysis.", "target_node_id": "i5"}, {"dimension": "completeness", "challenge": "ASC 606-10-32-28 through 32-30 (relative standalone selling price allocation) is never cited. The entire allocation discussion skips the mandatory step of determining SSPs for each PO and allocating the $360,000 transaction price proportionally. The agent assumes $30,000 to implementation and the residual to subscription without examining whether those figures equal or approximate relative SSPs, which is a required test, not an optional one.", "target_node_id": "i5"}, {"dimension": "completeness", "challenge": "The significant financing component analysis under ASC 606-10-32-15 through 32-17 is entirely absent. The customer paid $360,000 upfront on 2026-01-20 for services that extend through 2029. With a 36-month payment-to-delivery gap for the bulk of the subscription services, the entity must assess whether a significant financing component exists and, if so, adjust the transaction price. This could materially increase subscription revenue and require recognition of interest expense. The agent never raises this issue.", "target_node_id": null}, {"dimension": "completeness", "challenge": "The agent does not consider ASC 606-10-55-31 through 55-45 (customer options / material rights) comprehensively for the premium support add-on. The add-on is exercisable 'at any time during the term' at a fixed $1,000/month. If the customer has locked in a price for future periods while market prices could rise, this may convey a material right even if today's $1,000/month equals current SSP. The time-value and price-protection dimension of the option is not analyzed.", "target_node_id": "i3"}, {"dimension": "conclusions", "challenge": "Conclusion c2 states subscription revenue should be ~$15,000 through 2026-03-31, but the service period denominator used (33 months) is internally inconsistent with the contract facts. The contract is stated as 36 months beginning 2026-01-15; SaaS access begins 2026-02-15, giving a subscription service period of approximately 35 months, not 33 or 34.5. The agent's threshold t1 acknowledges the 34.5-month alternative but the conclusion defaults to 33 months without justification, producing an overstated monthly rate and an overstated recognized amount.", "target_node_id": "c2"}, {"dimension": "conclusions", "challenge": "The agent concludes the deferred revenue balance should be ~$315,000 instead of $322,500 (a $7,500 difference), but this calculation embeds the unresolved contract-value arithmetic error identified in oq1. If total contract value is $360,000 inclusive of implementation ($30,000 implementation already priced in and subscription is only $330,000 over 35 months \u2248 $9,429/month), the recognized subscription amount and deferred balance would both differ. Asserting a specific corrected deferred revenue figure while oq1 remains unresolved is premature and overstates the confidence of the conclusion.", "target_node_id": "c2"}, {"dimension": "citations", "challenge": "Node s2 is cited as the anchor for i2 ('SaaS subscription is a single PO satisfied over time'). ASC 606-10-25-19 addresses the distinct-good-or-service test for identifying performance obligations, not the over-time recognition criteria. The correct citation for over-time recognition is ASC 606-10-25-27 (already s3) and for measuring progress ASC 606-10-25-31 through 25-32. Using s2 as support for i2 conflates PO identification with PO satisfaction pattern.", "target_node_id": "i2"}, {"dimension": "citations", "challenge": "Node i3 cites s4 (ASC 606-10-32-11, variable consideration constraint) as an anchor for the premium support option analysis. The premium support add-on is a customer option for additional goods/services, governed by ASC 606-10-55-42 (material rights, already s5), not the variable consideration constraint. The option is not variable consideration in the current transaction price; it would only create a new contract or modification if exercised. Citing the variable consideration constraint mischaracterizes the accounting issue.", "target_node_id": "i3"}, {"dimension": "framing", "challenge": "The agent treats the $5,000/month rate used by the engagement team as simply an 'arithmetic error or misallocation' in a4/oq4, without considering the possibility that the team may have intended to spread the $360,000 evenly over 36 months as a single blended PO ($10,000/month) and then separately recognized the implementation portion, resulting in a net subscription rate of $10,000 - ($30,000/36) = $9,167/month, not $5,000/month. The $5,000/month figure more plausibly reflects recognizing $360,000 over 72 months (i.e., double the contract term) or some other systematic error. The agent should have reverse-engineered what arithmetic produces exactly $5,000/month before characterizing it.", "target_node_id": "f8"}, {"dimension": "completeness", "challenge": "The agent never considers whether the implementation services are recognized at the right point in time relative to when control transfers. Implementation completed 2026-02-15, but the analysis does not assess ASC 606-10-25-23 through 25-30 (point-in-time vs. over-time for the implementation PO) or whether partial completion through Q1 close should result in any different timing. While implementation is likely point-in-time, the reasoning record contains no analysis of this question.", "target_node_id": "c1"}], "agent_response_summary": "Added standards s6 (relative-SSP allocation 32-28 to 32-31), s7 (significant financing component 32-15 to 32-17), s8 (point-in-time vs over-time 25-23 to 25-30), and s9 (customer options/material rights 55-41 to 55-45). Added interpretations i6 (point-in-time analysis for implementation) and i7 (SFC analysis), revised i2 to anchor on s3 only, revised i3 and i5 to address relative-SSP allocation and material-right price protection. Added fact f9 reverse-engineering the $5,000/month rate, threshold t3 expressing the rate as a range rather than a point estimate, and alternatives a5 (over-time implementation) and a6 (one-year expedient). Restated c1 and c2 with broader supporting nodes, lowered c2 confidence to 0.7 and reframed the recognized amount as a range $13,750\u2013$15,000 to acknowledge unresolved oq1/oq5/oq6. Lowered c4 confidence to 0.55 to reflect price-protection dimension. Escalated three new open questions (oq5 relative-SSP allocation, oq6 SFC analysis, oq7 premium-support price protection) to the reviewer."}]};
+
+const KIND_COLORS = {
+  fact: '#BFE3F2', standard: '#D8C7F2', interpretation: '#F5F5F5',
+  threshold: '#FFF3B0', alternative: '#E5E5E5', conclusion: '#A8E6E0',
+  open_question: '#F2C5E8',
+};
+
+const cy = cytoscape({
+  container: document.getElementById('graph'),
+  elements: { nodes: ELEMENTS.nodes, edges: ELEMENTS.edges },
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'text-wrap': 'wrap',
+        'text-max-width': 180,
+        'font-size': 10,
+        'font-family': '-apple-system, "Segoe UI", Helvetica, Arial, sans-serif',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'width': 'label',
+        'height': 'label',
+        'padding': '8px',
+        'color': '#1A1A1A',
+      },
+    },
+    ...KIND_STYLES,
+    {
+      selector: 'edge',
+      style: {
+        'curve-style': 'bezier',
+        'target-arrow-shape': 'triangle',
+        'target-arrow-color': '#888',
+        'line-color': '#AAA',
+        'width': 1.2,
+        'label': 'data(label)',
+        'font-size': 8,
+        'color': '#777',
+        'text-background-color': '#FAFAFA',
+        'text-background-opacity': 0.85,
+        'text-background-padding': 2,
+      },
+    },
+    {
+      selector: 'node:selected',
+      style: {
+        'border-color': '#FF6B35',
+        'border-width': 4,
+      },
+    },
+    {
+      selector: '.hidden',
+      style: { 'display': 'none' },
+    },
+  ],
+  layout: {
+    name: 'dagre',
+    rankDir: 'LR',
+    nodeSep: 25,
+    rankSep: 80,
+    edgeSep: 10,
+  },
+  wheelSensitivity: 0.2,
+});
+
+function applyFilters() {
+  const checkedKinds = new Set(
+    Array.from(document.querySelectorAll('.kind-filter:checked')).map(el => el.value)
+  );
+  const minConf = parseFloat(document.getElementById('conf-filter').value) / 100;
+  document.getElementById('conf-value').textContent = minConf.toFixed(2);
+  const zone = document.getElementById('zone-filter').value;
+
+  cy.batch(() => {
+    cy.nodes().forEach(node => {
+      const data = node.data();
+      let visible = checkedKinds.has(data.kind);
+
+      if (visible && data.confidence !== null && data.confidence !== undefined) {
+        if (data.confidence < minConf) visible = false;
+      }
+
+      if (visible && zone !== 'all' && data.comfort_zone) {
+        if (data.comfort_zone !== zone) visible = false;
+      }
+
+      if (visible) node.removeClass('hidden');
+      else node.addClass('hidden');
+    });
+    cy.edges().forEach(edge => {
+      const src = cy.getElementById(edge.source().id());
+      const tgt = cy.getElementById(edge.target().id());
+      if (src.hasClass('hidden') || tgt.hasClass('hidden')) edge.addClass('hidden');
+      else edge.removeClass('hidden');
+    });
+  });
+}
+
+document.querySelectorAll('.kind-filter').forEach(el => el.addEventListener('change', applyFilters));
+document.getElementById('conf-filter').addEventListener('input', applyFilters);
+document.getElementById('zone-filter').addEventListener('change', applyFilters);
+
+function el(tag, opts) {
+  const e = document.createElement(tag);
+  if (opts) {
+    if (opts.class) e.className = opts.class;
+    if (opts.text !== undefined) e.textContent = opts.text;
+    if (opts.style) e.setAttribute('style', opts.style);
+    if (opts.dataNav !== undefined) e.setAttribute('data-nav', opts.dataNav);
+    if (opts.tag === 'a') e.href = '#';
+  }
+  return e;
+}
+
+function field(labelText, valueNode) {
+  const wrap = el('div', { class: 'field' });
+  wrap.appendChild(el('div', { class: 'panel-label', text: labelText }));
+  const valueWrap = el('div', { class: 'value' });
+  if (typeof valueNode === 'string') {
+    valueWrap.textContent = valueNode;
+  } else {
+    valueWrap.appendChild(valueNode);
+  }
+  wrap.appendChild(valueWrap);
+  return wrap;
+}
+
+function codeNode(text) {
+  const c = document.createElement('code');
+  c.textContent = text;
+  return c;
+}
+
+function navLink(targetId) {
+  const a = document.createElement('a');
+  a.href = '#';
+  a.textContent = targetId;
+  a.setAttribute('data-nav', targetId);
+  return a;
+}
+
+function renderPanel(nodeId) {
+  const panel = document.getElementById('panel');
+  panel.classList.remove('empty');
+  while (panel.firstChild) panel.removeChild(panel.firstChild);
+
+  const node = RECORD.nodes[nodeId];
+  if (!node) {
+    panel.classList.add('empty');
+    panel.textContent = 'Node not found.';
+    return;
+  }
+
+  panel.appendChild(field('ID', codeNode(node.id)));
+
+  const badge = document.createElement('span');
+  badge.className = 'kind-badge';
+  badge.style.background = KIND_COLORS[node.kind] || '#EEE';
+  badge.textContent = node.kind;
+  panel.appendChild(field('Kind', badge));
+
+  if (node.kind === 'fact') {
+    panel.appendChild(field('Claim', node.claim));
+    panel.appendChild(field('Source', node.source));
+  } else if (node.kind === 'standard') {
+    const ruleWrap = document.createElement('span');
+    ruleWrap.appendChild(codeNode(node.rule_id));
+    ruleWrap.appendChild(document.createTextNode(' (v' + node.version + ')'));
+    panel.appendChild(field('Rule', ruleWrap));
+    panel.appendChild(field('Text', node.text));
+  } else if (node.kind === 'interpretation') {
+    panel.appendChild(field('Statement', node.statement));
+  } else if (node.kind === 'threshold') {
+    panel.appendChild(field('Name', node.name));
+    panel.appendChild(field('Value', codeNode(String(node.value))));
+    panel.appendChild(field('Derivation', node.derivation));
+    if (node.sensitivity) panel.appendChild(field('Sensitivity', node.sensitivity));
+  } else if (node.kind === 'alternative') {
+    panel.appendChild(field('Alternative', node.alternative));
+    panel.appendChild(field('Rejection reason', node.rejection_reason));
+  } else if (node.kind === 'conclusion') {
+    panel.appendChild(field('Statement', node.statement));
+    let confText = node.confidence.toFixed(2) + ' — ' + node.comfort_zone + ' comfort zone';
+    if (node.comfort_zone_reason) confText += ' (' + node.comfort_zone_reason + ')';
+    panel.appendChild(field('Confidence', confText));
+  } else if (node.kind === 'open_question') {
+    panel.appendChild(field('Question', node.question));
+    const escText = (node.escalate_to_reviewer ? 'Yes' : 'No') + ' (raised by ' + node.raised_by + ')';
+    panel.appendChild(field('Escalate to reviewer', escText));
+  }
+
+  const cyNode = cy.getElementById(nodeId);
+  const incoming = cyNode.incomers('edge');
+  const outgoing = cyNode.outgoers('edge');
+
+  if (incoming.length > 0) {
+    const list = document.createElement('div');
+    list.className = 'edges';
+    incoming.forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'edge-row';
+      row.appendChild(navLink(e.source().id()));
+      row.appendChild(document.createTextNode(' — ' + e.data('label') + ' →'));
+      list.appendChild(row);
+    });
+    panel.appendChild(field('Incoming', list));
+  }
+  if (outgoing.length > 0) {
+    const list = document.createElement('div');
+    list.className = 'edges';
+    outgoing.forEach(e => {
+      const row = document.createElement('div');
+      row.className = 'edge-row';
+      row.appendChild(document.createTextNode('→ ' + e.data('label') + ' '));
+      row.appendChild(navLink(e.target().id()));
+      list.appendChild(row);
+    });
+    panel.appendChild(field('Outgoing', list));
+  }
+
+  const pre = document.createElement('pre');
+  pre.textContent = JSON.stringify(node, null, 2);
+  panel.appendChild(field('Raw JSON', pre));
+
+  panel.querySelectorAll('a[data-nav]').forEach(a => {
+    a.addEventListener('click', ev => {
+      ev.preventDefault();
+      const target = a.getAttribute('data-nav');
+      cy.nodes().unselect();
+      const tgt = cy.getElementById(target);
+      if (tgt) {
+        tgt.select();
+        cy.animate({ center: { eles: tgt }, zoom: Math.max(cy.zoom(), 1.2) }, { duration: 250 });
+        renderPanel(target);
+      }
+    });
+  });
+}
+
+cy.on('tap', 'node', evt => renderPanel(evt.target.id()));
+cy.on('tap', evt => {
+  if (evt.target === cy) {
+    cy.nodes().unselect();
+    const panel = document.getElementById('panel');
+    panel.classList.add('empty');
+    while (panel.firstChild) panel.removeChild(panel.firstChild);
+    panel.textContent = 'Click a node to see its details.';
+  }
+});
+</script>
+</body>
+</html>
